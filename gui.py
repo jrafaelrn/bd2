@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import tkinter as tk
 import numpy as np
+from db import Db
 
 
 class Gui:
@@ -15,6 +16,7 @@ class Gui:
         self.root.title("Campeonato de Xadrex")
         self.frame_menu = tk.Frame(self.root)
         self.frame_data = tk.Frame(self.root)
+        self.toolbar = None
     
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         
@@ -48,7 +50,12 @@ class Gui:
         self.fig, self.ax = plt.subplots()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame_data)
         self.canvas.get_tk_widget().pack()
-    
+        
+        
+        
+    ####################################
+    #              BOTÕES              #
+    ####################################    
     
     def generate_games(self):
         print("Generating games...")
@@ -66,13 +73,24 @@ class Gui:
         x = np.random.randint(10, 50, 20) # Change this to the real data from the database
         y = np.random.randint(10, 50, 20) # Change this to the real data from the database
         self.ax.scatter(x, y)
+        self.create_toolbar()
         self.canvas.draw()
     
     
     def list_countries(self):
         print("Listing countries...")
         
+        
+    def create_toolbar(self):
+        if self.toolbar == None:     
+            self.toolbar = NavigationToolbar2Tk(self.canvas, self.frame_data, pack_toolbar=False)
+        self.toolbar.update()
+        self.toolbar.pack()
+        
     
+    def start_database(self):
+        self.db = Db()
+        
     
     def start(self):
         print("Starting GUI...")
@@ -80,4 +98,5 @@ class Gui:
         self.create_data_frame()
         self.frame_menu.pack(side=tk.TOP)
         self.frame_data.pack(side=tk.BOTTOM)
+        #self.start_database()
         self.root.mainloop()
