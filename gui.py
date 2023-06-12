@@ -12,6 +12,7 @@ class Gui:
         print("Initializing GUI...")
         self.root = tk.Tk()
         self.root.geometry("1000x600")
+        self.root.title("Campeonato de Xadrex")
         self.frame_menu = tk.Frame(self.root)
         self.frame_data = tk.Frame(self.root)
     
