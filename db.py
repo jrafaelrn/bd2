@@ -8,7 +8,7 @@ class Db:
         
 
     def connect_db(self):
-        self.conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        self.conn = psycopg2.connect("host=localhost dbname=db user=user password=password")
         print("Connected to database")
         
 

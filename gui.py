@@ -98,5 +98,5 @@ class Gui:
         self.create_data_frame()
         self.frame_menu.pack(side=tk.TOP)
         self.frame_data.pack(side=tk.BOTTOM)
-        #self.start_database()
+        self.start_database()
         self.root.mainloop()
