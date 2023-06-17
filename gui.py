@@ -69,7 +69,8 @@ class Gui:
         except:
             pass
         
-        
+    
+    # Função para inserir os dados da tabela    
     def set_table_data(self, headers, data):
         
         print(f'Columns: {headers}')
@@ -108,10 +109,13 @@ class Gui:
         
         return 100
         
+        
     ####################################
     #              BOTÕES              #
     ####################################    
     
+    # Faça um programa que gere a programaçã dos jogos,
+    # mencionando os jogadores, árbitros, lugar e hora do jogo
     def generate_games(self):
         
         print("Generating games...")
@@ -133,12 +137,26 @@ class Gui:
         self.set_table_data(headers, data)
     
     
+    # Faça um programa que gere quais são os jogos programados
+    # para um Hotel, Jogador e Árbitro específico
     def generate_hotels(self):
     
         print("Generating hotels...")
+        
+        self.create_table_frame()
+        
+        command = """
+        """
+        
+        #data = self.db.execute_bd(command.replace("\n", ""))
+        data = [["Hotel 1", "Jogador 1", "Árbitro 1"], ["Hotel 2", "Jogador 2", "Árbitro 2"], ["Hotel 3", "Jogador 3", "Árbitro 3"]]
+        headers = ["Hotel", "Nome Jogador", "Nome Árbitro"]
+        
+        self.set_table_data(headers, data)
     
     
     
+    # Faça uma curva que apresente os jogos por número de movimentos
     def list_moviments(self):
         
         print("Listing moviments...")
@@ -152,6 +170,7 @@ class Gui:
         self.canvas.draw()
     
     
+    # Faça uma curva que liste o número de jogadores por País
     def list_countries(self):
         print("Listing countries...")
         
