@@ -57,6 +57,9 @@ class Gui:
     # Frame para os gráficos
     def create_chart_frame(self):
         
+        self.remove_chart_frame()
+        self.remove_table_frame()
+        
         self.fig, self.ax = plt.subplots()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame_data)
         self.canvas.get_tk_widget().pack()
@@ -176,6 +179,9 @@ class Gui:
         headers = ["Nome Jogador", "Núm. Jogo", "Nome Árbitro", "Dia", "Mês", "Ano", "ID Salão", "Nome Hotel"]
         
         self.set_table_data(headers, data)
+        
+        print("Games generated")
+    
     
     
     # Faça um programa que gere quais são os jogos programados
@@ -201,37 +207,56 @@ class Gui:
     def list_moviments(self):
         
         print("Listing moviments...")
-        self.remove_table_frame()
-        self.remove_chart_frame()
-        self.create_chart_frame()
-        self.ax.clear()
         
         command = """
         """
         
         x = [i for i in range(100)]
         y = [random.randint(50, 60) for i in range(100)]
+        
+        self.set_chart_data(x, y)
     
-        self.ax.plot(x, y)
-        self.ax.axis([0, max(x)+10, 0, max(y)])
-        self.create_toolbar()
-        self.canvas.draw()
+        
+    
     
     
     # Faça uma curva que liste o número de jogadores por País
     def list_countries(self):
-        print("Listing countries...")
         
+        print("Listing countries...")
+
+        command = """
+        """
+        
+        x = ["Brasil", "Argentina", "Chile", "Uruguai", "Paraguai"]
+        y = [random.randint(50, 60) for i in range(len(x))]
+        
+        self.set_chart_data(x, y)
+        
+        
+    def set_chart_data(self, x, y):
+        
+        self.create_chart_frame()
+        
+        self.ax.plot(x, y)
+        self.ax.axis([0, len(x), 0, max(y) + 10])
+        self.create_toolbar()
+        self.canvas.draw()       
         
     
-    def start_database(self):
-        self.db = Db()
-        
+    
+    ####################################
+    #             START                #
+    ####################################
     
     def start(self):
+        
         print("Starting GUI...")
-        self.create_menu_superior()
+        self.db = Db() # Instancia o banco de dados
+        self.create_menu_superior() # Cria o menu com botões
+        
         self.frame_menu.pack(side=tk.TOP)
         self.frame_data.pack(side=tk.BOTTOM)
-        self.start_database()
+        
         self.root.mainloop()
+        
