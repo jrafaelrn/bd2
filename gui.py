@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from tkinter import ttk
 import tkinter as tk
 import numpy as np
 from db import Db
@@ -12,7 +13,7 @@ class Gui:
         # Instance variables for the GUI
         print("Initializing GUI...")
         self.root = tk.Tk()
-        self.root.geometry("1000x600")
+        self.root.geometry("1100x600")
         self.root.title("Campeonato de Xadrex")
         self.frame_menu = tk.Frame(self.root)
         self.frame_data = tk.Frame(self.root)
@@ -37,20 +38,59 @@ class Gui:
         button_list_countries = tk.Button(self.frame_menu, text="Listar jogadores / país", command=self.list_countries)
         
         # Add to interface
-        button_generate_games.pack(side=tk.LEFT, padx=20)
-        button_generate_hotels.pack(side=tk.LEFT, padx=20)
-        button_list_moviments.pack(side=tk.LEFT, padx=20)
-        button_list_countries.pack(side=tk.LEFT, padx=20)
+        PADX = 20
+        PADY = 20
+        button_generate_games.pack(side=tk.LEFT, padx=PADX, pady=PADY)
+        button_generate_hotels.pack(side=tk.LEFT, padx=PADX, pady=PADY)
+        button_list_moviments.pack(side=tk.LEFT, padx=PADX, pady=PADY)
+        button_list_countries.pack(side=tk.LEFT, padx=PADX, pady=PADY)
     
     
     
-    # Frame para os gráficos e dados
-    def create_data_frame(self):
+    # Frame para os gráficos
+    def create_chart_frame(self):
         
         self.fig, self.ax = plt.subplots()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame_data)
         self.canvas.get_tk_widget().pack()
+    
+    
+    # Frame para as tabelas
+    def create_table_frame(self):
         
+        print("Creating table frame...")
+        try:
+            self.my_tree.destroy()
+        except:
+            pass
+        self.my_tree = ttk.Treeview(self.root)
+        
+        
+        
+    def set_table_data(self, headers, data):
+        
+        print(f'Columns: {headers}')
+        print(f'Data: {data}')
+        
+        self.my_tree["columns"] = headers
+        
+        # Format columns
+        self.my_tree.column("#0", width=0)
+        for i in range(1, len(headers)):
+            self.my_tree.column(headers[i], anchor=tk.W, width=120)
+            
+        # Create headings
+        self.my_tree.heading("#0", text="", anchor=tk.W)
+        for i in range(1, len(headers)):
+            self.my_tree.heading(headers[i], text=headers[i], anchor=tk.W)
+            
+        # Add data
+        for i in range(len(data)):
+            self.my_tree.insert(parent="", index="end", iid=i, text="", values=data[i])
+        
+        # Pack to screen
+        self.my_tree.pack()
+
         
         
     ####################################
@@ -58,10 +98,28 @@ class Gui:
     ####################################    
     
     def generate_games(self):
+        
         print("Generating games...")
+        
+        self.create_table_frame()
+    
+        command = """
+        select DISTINCT get_name_by_id(num_jogador) as Nome_Jogador,
+        A.num_jogo, get_name_by_id(B.num_arbitro) as Nome_Arbitro, dia, mes, ano, D.id_salao, E.nome
+        from JOGA A, JOGO B, JORNADA C, E_CELEBRADO_EM D, HOTEL E, SALAO F
+        where A.num_jogo = B.num_jogo AND B.id_jornada = C.id
+        AND B.num_jogo = D.num_jogo AND D.id_salao = F.id AND F.id_hotel = E.id
+        ORDER BY A.num_jogo
+        """
+        
+        data = self.db.execute_bd(command.replace("\n", ""))
+        headers = ["Nome Jogador", "Núm. Jogo", "Nome Árbitro", "Dia", "Mês", "Ano", "ID Salão", "Nome Hotel"]
+        
+        self.set_table_data(headers, data)
     
     
     def generate_hotels(self):
+    
         print("Generating hotels...")
     
     
@@ -70,8 +128,10 @@ class Gui:
         
         print("Listing moviments...")
         self.ax.clear()
-        x = np.random.randint(10, 50, 20) # Change this to the real data from the database
-        y = np.random.randint(10, 50, 20) # Change this to the real data from the database
+            
+        x = []
+        y = []
+    
         self.ax.scatter(x, y)
         self.create_toolbar()
         self.canvas.draw()
@@ -95,7 +155,6 @@ class Gui:
     def start(self):
         print("Starting GUI...")
         self.create_menu_superior()
-        self.create_data_frame()
         self.frame_menu.pack(side=tk.TOP)
         self.frame_data.pack(side=tk.BOTTOM)
         self.start_database()

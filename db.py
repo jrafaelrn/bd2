@@ -18,10 +18,14 @@ class Db:
 
     def execute_bd(self, command: str):
         
+        command = command.lower()
         cur = self.conn.cursor()
         cur.execute(command)
         self.conn.commit()
-        cur.close()
         
-        if command.startswith("SELECT"):
-            return cur.fetchall()
+        data = None
+        if "select" in command:
+            data = cur.fetchall()
+
+        cur.close()
+        return data
