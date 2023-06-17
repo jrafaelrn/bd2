@@ -1,3 +1,4 @@
+import random
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from tkinter import ttk
@@ -28,6 +29,9 @@ class Gui:
         self.root.quit()
     
     
+    ####################################
+    #           MENU SUPERIOR          #
+    ####################################
     
     # Frame para o menu superior com os botões     
     def create_menu_superior(self):
@@ -46,6 +50,9 @@ class Gui:
         button_list_countries.pack(side=tk.LEFT, padx=PADX, pady=PADY)
     
     
+    ####################################
+    #             GRÁFICOS             #
+    ####################################
     
     # Frame para os gráficos
     def create_chart_frame(self):
@@ -53,7 +60,37 @@ class Gui:
         self.fig, self.ax = plt.subplots()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame_data)
         self.canvas.get_tk_widget().pack()
+        
     
+    def remove_chat_frame(self):
+        
+        if self.fig != None:
+            self.canvas.get_tk_widget().destroy()
+            self.fig = None
+            self.ax = None
+            
+    
+    
+    #########################################
+    #    BARRA DE FERRAMENTAS DO GRÁFICO    #
+    #########################################
+    
+    def create_toolbar(self):
+        if self.toolbar == None:     
+            self.toolbar = NavigationToolbar2Tk(self.canvas, self.frame_data, pack_toolbar=False)
+        self.toolbar.update()
+        self.toolbar.pack()
+        
+    
+    def remove_toolbar(self):
+        if self.toolbar != None:
+            self.toolbar.destroy()
+            self.toolbar = None
+    
+    
+    ####################################
+    #              TABELAS             #
+    ####################################
     
     # Frame para as tabelas
     def create_table_frame(self):
@@ -160,12 +197,18 @@ class Gui:
     def list_moviments(self):
         
         print("Listing moviments...")
+        self.remove_table_frame()
+        self.create_chart_frame()
         self.ax.clear()
-            
-        x = []
-        y = []
+        
+        command = """
+        """
+        
+        x = [i for i in range(100)]
+        y = [random.randint(50, 60) for i in range(100)]
     
-        self.ax.scatter(x, y)
+        self.ax.plot(x, y)
+        self.ax.axis([0, max(x)+10, 0, max(y)])
         self.create_toolbar()
         self.canvas.draw()
     
@@ -174,12 +217,6 @@ class Gui:
     def list_countries(self):
         print("Listing countries...")
         
-        
-    def create_toolbar(self):
-        if self.toolbar == None:     
-            self.toolbar = NavigationToolbar2Tk(self.canvas, self.frame_data, pack_toolbar=False)
-        self.toolbar.update()
-        self.toolbar.pack()
         
     
     def start_database(self):
