@@ -62,12 +62,15 @@ class Gui:
         self.canvas.get_tk_widget().pack()
         
     
-    def remove_chat_frame(self):
+    def remove_chart_frame(self):
         
-        if self.fig != None:
+        try:
             self.canvas.get_tk_widget().destroy()
+            self.remove_toolbar()
             self.fig = None
             self.ax = None
+        except:
+            pass
             
     
     
@@ -97,6 +100,7 @@ class Gui:
         
         print("Creating table frame...")
         self.remove_table_frame()
+        self.remove_chart_frame()
         self.my_tree = ttk.Treeview(self.root)
         
     
@@ -198,6 +202,7 @@ class Gui:
         
         print("Listing moviments...")
         self.remove_table_frame()
+        self.remove_chart_frame()
         self.create_chart_frame()
         self.ax.clear()
         
