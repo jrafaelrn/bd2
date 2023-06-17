@@ -76,12 +76,13 @@ class Gui:
         
         # Format columns
         self.my_tree.column("#0", width=0)
-        for i in range(1, len(headers)):
-            self.my_tree.column(headers[i], anchor=tk.W, width=120)
+        for i in range(0, len(headers)):
+            width_ = self.get_width_by_type(data[0][i])
+            self.my_tree.column(headers[i], anchor=tk.W, width=width_)
             
         # Create headings
         self.my_tree.heading("#0", text="", anchor=tk.W)
-        for i in range(1, len(headers)):
+        for i in range(0, len(headers)):
             self.my_tree.heading(headers[i], text=headers[i], anchor=tk.W)
             
         # Add data
@@ -91,7 +92,18 @@ class Gui:
         # Pack to screen
         self.my_tree.pack()
 
+    
+    def get_width_by_type(self, data):
         
+        print(f'Getting width by type: {data} -> {type(data)}')
+        
+        if type(data) == str:
+            return 170
+        
+        if type(data) == int or type(data) == float or str(type(data)) == "<class 'decimal.Decimal'>":
+            return 80
+        
+        return 100
         
     ####################################
     #              BOTÕES              #
