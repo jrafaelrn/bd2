@@ -59,12 +59,15 @@ class Gui:
     def create_table_frame(self):
         
         print("Creating table frame...")
+        self.remove_table_frame()
+        self.my_tree = ttk.Treeview(self.root)
+        
+    
+    def remove_table_frame(self):
         try:
             self.my_tree.destroy()
         except:
             pass
-        self.my_tree = ttk.Treeview(self.root)
-        
         
         
     def set_table_data(self, headers, data):
