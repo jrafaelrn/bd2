@@ -68,8 +68,8 @@ class Gui:
     def remove_chart_frame(self):
         
         try:
-            self.canvas.get_tk_widget().destroy()
             self.remove_toolbar()
+            self.canvas.get_tk_widget().pack_forget()
             self.fig = None
             self.ax = None
         except:
@@ -82,16 +82,19 @@ class Gui:
     #########################################
     
     def create_toolbar(self):
+        
+        self.remove_toolbar()
         if self.toolbar == None:     
             self.toolbar = NavigationToolbar2Tk(self.canvas, self.frame_data, pack_toolbar=False)
-        self.toolbar.update()
         self.toolbar.pack()
         
     
     def remove_toolbar(self):
-        if self.toolbar != None:
-            self.toolbar.destroy()
-            self.toolbar = None
+        try:
+            self.toolbar.pack_forget()
+        except:
+            pass
+            
     
     
     ####################################
@@ -104,18 +107,20 @@ class Gui:
         print("Creating table frame...")
         self.remove_table_frame()
         self.remove_chart_frame()
-        self.my_tree = ttk.Treeview(self.root)
+        self.my_tree = ttk.Treeview(self.frame_data)
         
     
     def remove_table_frame(self):
         try:
-            self.my_tree.destroy()
+            self.my_tree.pack_forget()
         except:
             pass
         
     
     # Função para inserir os dados da tabela    
     def set_table_data(self, headers, data):
+        
+        self.create_table_frame()
         
         print(f'Columns: {headers}')
         print(f'Data: {data}')
@@ -138,7 +143,7 @@ class Gui:
             self.my_tree.insert(parent="", index="end", iid=i, text="", values=data[i])
         
         # Pack to screen
-        self.my_tree.pack()
+        self.my_tree.pack(expand=True, fill=tk.Y)
 
     
     def get_width_by_type(self, data):
@@ -163,8 +168,6 @@ class Gui:
     def generate_games(self):
         
         print("Generating games...")
-        
-        self.create_table_frame()
     
         command = """
         select DISTINCT get_name_by_id(num_jogador) as Nome_Jogador,
@@ -190,8 +193,6 @@ class Gui:
     
         print("Generating hotels...")
         
-        self.create_table_frame()
-        
         command = """
         """
         
@@ -216,10 +217,8 @@ class Gui:
         
         self.set_chart_data(x, y)
     
-        
     
-    
-    
+     
     # Faça uma curva que liste o número de jogadores por País
     def list_countries(self):
         
@@ -256,7 +255,7 @@ class Gui:
         self.create_menu_superior() # Cria o menu com botões
         
         self.frame_menu.pack(side=tk.TOP)
-        self.frame_data.pack(side=tk.BOTTOM)
+        self.frame_data.pack(side=tk.TOP, fill=tk.Y)
         
         self.root.mainloop()
         
