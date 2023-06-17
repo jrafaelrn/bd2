@@ -255,7 +255,7 @@ class Gui:
         self.create_menu_superior() # Cria o menu com botões
         
         self.frame_menu.pack(side=tk.TOP)
-        self.frame_data.pack(side=tk.TOP, fill=tk.Y)
+        self.frame_data.pack(side=tk.TOP, fill=tk.Y, expand=1)
         
         self.root.mainloop()
         
